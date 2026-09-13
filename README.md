@@ -55,3 +55,14 @@ adversarial-robust multi-agent verification, those are real (much
 larger) engineering problems worth scoping separately — this repo
 just gives you the two components that were genuinely soundly-based
 ideas, working and tested.
+
+
+adaptive-system/
+├── .github/
+│   └── workflows/
+│       └── tests.yml
+├── entropy_router.py
+├── robust_filter.py
+├── test_system.py  (или папка tests/)
+├── requirements.txt
+└── README.md
