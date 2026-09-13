@@ -1,3 +1,4 @@
+```markdown
 [![Tests](https://github.com/Sega757/adaptive-system/actions/workflows/tests.yml/badge.svg)](https://github.com/Sega757/adaptive-system/actions/workflows/tests.yml)
 [![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -37,3 +38,87 @@ Clone the repository and install the dependencies:
 git clone [https://github.com/Sega757/adaptive-system.git](https://github.com/Sega757/adaptive-system.git)
 cd adaptive-system
 pip install -r requirements.txt
+
+```
+
+### Dependencies (`requirements.txt`)
+
+* `numpy>=1.20.0`
+* `scikit-learn>=1.0.0`
+* `pytest>=7.0.0`
+
+---
+
+## Quickstart
+
+### Dynamic Routing by Prediction Entropy
+
+```python
+from entropy_router import EntropyRouter
+from sklearn.datasets import load_digits
+from sklearn.model_selection import train_test_split
+
+# Load dataset
+X, y = load_digits(return_X_y=True)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# Initialize and train router
+router = EntropyRouter(entropy_threshold=0.5)
+router.fit(X_train, y_train)
+
+# Run inference with dynamic tier selection
+predictions = router.predict(X_test)
+print(f"Accuracy: {router.score(X_test, y_test):.4f}")
+
+```
+
+### Outlier-Resistant Estimation (Huber IRLS)
+
+```python
+import numpy as np
+from robust_filter import HuberRegressorIRLS
+
+# Generate linear data with heavy anomalies
+np.random.seed(42)
+X = np.linspace(0, 10, 100).reshape(-1, 1)
+y = 2.5 * X.squeeze() + np.random.normal(0, 1, 100)
+y[::10] += 50.0  # Introduce 10% severe outliers
+
+# Fit robust model
+model = HuberRegressorIRLS(delta=1.345)
+model.fit(X, y)
+
+print(f"Estimated coefficient: {model.coef_[0]:.4f}")
+
+```
+
+---
+
+## Running Tests
+
+Execute unit tests and convergence suites:
+
+```bash
+pytest -v
+
+```
+
+Test coverage includes:
+
+1. Mathematical validity of Shannon entropy calculations.
+2. Router fallback consistency across threshold sweeps.
+3. Finite iteration convergence of the IRLS algorithm.
+4. Parameter parity with OLS under standard Gaussian noise.
+5. Breakdown points under heavy-tailed contamination.
+
+---
+
+## Scope & Design Constraints
+
+* Relies entirely on transparent, verifiable numerical methods.
+* No external API keys, RPC connections, or network runtime requirements.
+* All benchmarks run locally on standard CPU hardware.
+
+```
+
+```
